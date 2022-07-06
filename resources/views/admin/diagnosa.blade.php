@@ -34,6 +34,8 @@
                     <input type="text" class="form-control mb-3 w-50" name="nama">
                     @endrole
 
+                    <p>Pilih gejala yang sedang dirasakan.</p>
+
                     <label for=""><b><i class="fas fa-th mr-1"></i> Gejala-gejala</b></label>
                     @foreach($gejala as $key => $value)
                         @php 
@@ -84,6 +86,10 @@
 
     <x-slot name="script">
         <script>
+            $('button[type="submit"]').click(function() {
+                $(this).attr('disabled')
+            })
+
             $('select[name="diagnosa[]"]').on('change', function() {
                 if(this.value == "") {
                     $(this).attr('class', 'form-control form-control-sm red-border')
