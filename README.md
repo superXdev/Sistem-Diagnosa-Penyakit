@@ -1,7 +1,7 @@
 # Sistem Diagnosa Penyakit
 Ini adalah implementasi sistem pakar dengan menggunakan metode Certainty Factor, project yang saya gunakan sebagai tugas akhir semester pada mata kuliah Sistem Pakar.
 
-![App Screenshot](https://github.com/superXdev/QAdmin/blob/main/public/dist/img/screenshot/ss.png?raw=true)
+![App Screenshot](https://github.com/superXdev/Sistem-Diagnosa-Penyakit/blob/main/public/dist/img/screenshot/dashboard.png?raw=true)
 
   
 
@@ -37,6 +37,9 @@ That's it!
 ## Admin credentials
 - **Username:** admin
 - **Password:** admin123
+
+## Hasil Diagnosa
+![diagnosa](https://github.com/superXdev/Sistem-Diagnosa-Penyakit/blob/main/public/dist/img/screenshot/diagnosa.png?raw=true)
 
 ## Running Tests
 
