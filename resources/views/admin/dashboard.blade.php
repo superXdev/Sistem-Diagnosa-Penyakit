@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="title">
-        Dahsboard
+        Dashboard
     </x-slot>
 
     <section class="row">
