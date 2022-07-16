@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\DiagnosaController;
 use App\Models\{Riwayat, Gejala};
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class GenerateDiagnosaCommand extends Command
 {
@@ -92,10 +93,16 @@ class GenerateDiagnosaCommand extends Command
 
             $this->line("<fg=green>Generated sample($i): </>".$name." - ".$result['cf_max'][1]);
 
-            $file_pdf = 'Diagnosa-'.\Str::slug($name).'-'.time().'.pdf';
+            $path = public_path('storage/downloads');
+
+            if(!File::isDirectory($path)){
+                File::makeDirectory($path, 0777, true, true);
+            }
+
+            $file_pdf = 'Diagnosa-'.$name.'-'.time().'.pdf';
 
             PDF::loadView('pdf.riwayat', ['id' => $riwayat->id])
-                ->save(public_path("downloads/$file_pdf"));
+                ->save($path."/".$file_pdf);
 
             $riwayat->update(['file_pdf' => $file_pdf]);
         }

@@ -19,11 +19,7 @@
 
         {{-- chart section --}}
         <div class="col-md-12">
-            @if(session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
-            </div>
-            @endif
+            <x-alert-error></x-alert-error>
             <div class="card">
                 <div class="card-body">
                     <form action="{{ route('admin.diagnosa') }}" method="post">

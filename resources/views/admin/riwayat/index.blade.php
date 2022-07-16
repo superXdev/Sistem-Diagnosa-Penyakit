@@ -26,7 +26,7 @@
 					<td>{{ unserialize($row->cf_max)[1] }} <b>(<span class="text-danger">{{ number_format(unserialize($row->cf_max)[0] * 100, 2) }}%</span>)</b></td>
 					<td>{{ $row->created_at->format('d M Y, H:m:s') }}</td>
 					<td>
-						<a href="{{ asset("downloads/$row->file_pdf") }}" target="_blank" class="btn btn-primary btn-sm mr-1"><i class="fas fa-print mr-1"></i></a>
+						<a href="{{ asset("storage/downloads/$row->file_pdf") }}" target="_blank" class="btn btn-primary btn-sm mr-1"><i class="fas fa-print mr-1"></i></a>
 						<a href="{{ route('admin.riwayat', $row->id) }}" class="btn btn-info btn-sm"><i class="fas fa-eye mr-1"></i></a>
 					</td>
 				</tr>
