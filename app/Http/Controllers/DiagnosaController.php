@@ -191,7 +191,7 @@ class DiagnosaController extends Controller
         $result = $this->kalkulasi_cf($data);
 
         if($result['cf_max'] == null) {
-            return back()->with('error', 'Terjadi sebuah kesalahan');
+            return back()->withErrors(['Terjadi sebuah kesalahan']);
         }
 
         $riwayat = Riwayat::create([
