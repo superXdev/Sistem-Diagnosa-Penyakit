@@ -3,7 +3,8 @@ Ini adalah implementasi sistem pakar dengan menggunakan metode Certainty Factor,
 
 ![App Screenshot](https://github.com/superXdev/Sistem-Diagnosa-Penyakit/blob/main/public/dist/img/screenshot/dashboard.png?raw=true)
 
-  
+## Live Demo
+Demo URL: https://sidap.zumaait.xyz/  
 
 ## Tech Stack
 
