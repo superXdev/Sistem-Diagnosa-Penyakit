@@ -36,4 +36,11 @@ class Gejala extends Model
     {
         return $this->belongsToMany(Penyakit::class)->withPivot('value_cf');
     }
+
+    // set kode attribute
+    public function setKodeAttribute($value)
+    {
+        $code = str_replace('G', '', $value);
+        $this->attributes['kode'] = 'G' . str_pad($code, 3, '0', STR_PAD_LEFT);
+    }
 }

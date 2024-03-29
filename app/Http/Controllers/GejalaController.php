@@ -4,35 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Models\Gejala;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class GejalaController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:gejala-list', ['only' => ['index']]);
-         $this->middleware('permission:gejala-create', ['only' => ['store']]);
-         $this->middleware('permission:gejala-edit', ['only' => ['update', 'json']]);
-         $this->middleware('permission:gejala-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:gejala-list', ['only' => ['index']]);
+        $this->middleware('permission:gejala-create', ['only' => ['store']]);
+        $this->middleware('permission:gejala-edit', ['only' => ['update', 'json']]);
+        $this->middleware('permission:gejala-delete', ['only' => ['destroy']]);
     }
 
     public function index()
     {
-        $gejala = Gejala::paginate(10);
+        $gejala = Gejala::orderBy('kode', 'asc')->paginate(10);
+        $lastCode = $this->generateCode(Gejala::orderBy('kode', 'desc')->first());
+        return view('admin.gejala.index', compact('gejala', 'lastCode'));
+    }
 
-        return view('admin.gejala.index', compact('gejala'));
+    private function generateCode($lastCodeGejala)
+    {
+        $prefix = 'G';
+        $lastCode = $lastCodeGejala ? $lastCodeGejala->kode : 'G001';
+        $lastCode = str_replace($prefix, '', $lastCode);
+        $lastCode = str_pad($lastCode + 1, 3, '0', STR_PAD_LEFT); // 049
+        $lastCode = $prefix . $lastCode; // G049
+
+        return $lastCode;
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kode' => 'required',
-            'nama' => 'required'
+            'nama' => 'required|unique:gejalas,nama',
         ]);
 
         $data = $request->all();
-
+        $data['kode'] = $this->generateCode(Gejala::orderBy('kode', 'desc')->first());
         Gejala::create($data);
-
         return back()->with('success', 'Data gejala berhasil disimpan');
     }
 
@@ -46,9 +56,14 @@ class GejalaController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'kode' => 'required',
             'nama' => 'required'
         ]);
+
+        // check if nama is unique
+        $gejala = Gejala::where('nama', $request->nama)->where('id', '!=', $request->id)->first();
+        if ($gejala) {
+            throw ValidationException::withMessages(['nama' => 'Gejala yang anda ubah sudah ada']);
+        }
 
         $data = $request->all();
 
