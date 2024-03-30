@@ -10,13 +10,13 @@ class RuleController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:rules-list', ['only' => ['index']]);
-         $this->middleware('permission:rules-edit', ['only' => ['update']]);
+        $this->middleware('permission:rules-list', ['only' => ['index']]);
+        $this->middleware('permission:rules-edit', ['only' => ['update']]);
     }
 
     public function index($id)
     {
-        $penyakit = Penyakit::select('nama', 'id')->get();
+        $penyakit = Penyakit::all();
         $gejala = Gejala::all();
         $data_penyakit = Penyakit::find($id);
         $gejala_penyakit = $data_penyakit->gejalas();
@@ -27,7 +27,7 @@ class RuleController extends Controller
 
     public function update(Request $request, $id)
     {
-        $input = $request->all();
+        $input = $request->all()['data'];
         $penyakit_list = DB::table('gejala_penyakit')->where(['penyakit_id' => $id])->get();
 
         $gejala_list = [];
@@ -35,23 +35,23 @@ class RuleController extends Controller
         $disabled = 0;
         $changed = 0;
 
-        foreach($input as $key => $value) {
-            if(str_contains($key, 'gejala')) {
-                $gejala_id = explode('-', $key)[1];
+        foreach ($input as $key => $value) {
+            if (str_contains($value['name'], 'gejala')) {
+                $gejala_id = explode('-', $value['name'])[2];
 
                 $gejala_penyakit = DB::table('gejala_penyakit')
                     ->where(['penyakit_id' => $id, 'gejala_id' => $gejala_id]);
 
-                if(count($gejala_penyakit->get()) == 0) {
+                if (count($gejala_penyakit->get()) == 0) {
                     DB::table('gejala_penyakit')
                         ->insert([
-                            'penyakit_id' => $id, 
-                            'gejala_id' => $gejala_id, 
-                            'value_cf' => $value
+                            'penyakit_id' => $id,
+                            'gejala_id' => $gejala_id,
+                            'value_cf' => $value['value']
                         ]);
                 } else {
-                    if($gejala_penyakit->first()->value_cf != $value) {
-                        $gejala_penyakit->update(['value_cf' => $value]);
+                    if ($gejala_penyakit->first()->value_cf != $value['value']) {
+                        $gejala_penyakit->update(['value_cf' => $value['value']]);
                         $changed++;
                     }
                 }
@@ -62,8 +62,8 @@ class RuleController extends Controller
         }
 
 
-        foreach($penyakit_list as $penyakit) {
-            if(!in_array($penyakit->gejala_id, $gejala_list)) {
+        foreach ($penyakit_list as $penyakit) {
+            if (!in_array($penyakit->gejala_id, $gejala_list)) {
                 $data = DB::table('gejala_penyakit')
                     ->where(['penyakit_id' => $id, 'gejala_id' => $penyakit->gejala_id])
                     ->first();
@@ -73,17 +73,16 @@ class RuleController extends Controller
             }
         }
 
-
         activity()
-           ->causedBy(auth()->user())
-           ->withProperties([
+            ->causedBy(auth()->user())
+            ->withProperties([
                 'penyakit' => Penyakit::find($id)->nama,
-                'enabled' => $enabled, 
+                'enabled' => $enabled,
                 'disabled' => $disabled,
                 'changed' => $changed
             ])
-           ->log('Updated basis rules');
+            ->log('Updated basis rules');
 
-        return back()->with('success', 'Rules berhasil diubah');
+        return true;
     }
 }

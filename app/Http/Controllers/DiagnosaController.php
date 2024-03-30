@@ -26,29 +26,26 @@ class DiagnosaController extends Controller
     public function tingkat_keyakinan($keyakinan)
     {
         switch ($keyakinan) {
-            case -0.8:
-                return 'Hampir pasti tidak';
-                break;
-            case -1:
-                return 'Pasti tidak';
-                break;
-            case -0.6:
-                return 'Kemungkinan besar tidak';
-                break;
-            case -0.4:
-                return 'Mungkin tidak';
-                break;
-            case 0.4:
-                return 'Mungkin';
-                break;
-            case 0.6:
-                return 'Sangat Mungkin';
+            case 1:
+                return 'Sangat Yakin';
                 break;
             case 0.8:
-                return 'Hampir pasti';
+                return 'Yakin';
                 break;
-            case 1:
-                return 'Pasti';
+            case 0.6:
+                return 'Cukup Yakin';
+                break;
+            case 0.4:
+                return 'Kurang Yakin';
+                break;
+            case 0.2:
+                return 'Tidak Tahu';
+                break;
+            case 0:
+                return 'Tidak Yakin';
+                break;
+            default:
+                return 'Tidak Yakin';
                 break;
         }
     }
@@ -188,6 +185,10 @@ class DiagnosaController extends Controller
         }
 
         $data = $request->all();
+        // check if all diagnosa is null, return back with error
+        if (count(array_filter($data['diagnosa'])) == null) {
+            return back()->withErrors(['Gejala harus diisi']);
+        }
 
         $result = $this->kalkulasi_cf($data);
 

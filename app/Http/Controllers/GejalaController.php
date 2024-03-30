@@ -20,7 +20,9 @@ class GejalaController extends Controller
     {
         $gejala = Gejala::orderBy('kode', 'asc')->paginate(10);
         $lastCode = $this->generateCode(Gejala::orderBy('kode', 'desc')->first());
-        return view('admin.gejala.index', compact('gejala', 'lastCode'));
+        $gejalaDauns = Gejala::where('kategori', 'daun')->paginate(10);
+        $gejalaBatangs = Gejala::where('kategori', 'batang')->paginate(10);
+        return view('admin.gejala.index', compact('gejala', 'lastCode', 'gejalaDauns', 'gejalaBatangs'));
     }
 
     private function generateCode($lastCodeGejala)
@@ -38,6 +40,7 @@ class GejalaController extends Controller
     {
         $request->validate([
             'nama' => 'required|unique:gejalas,nama',
+            'kategori' => 'required'
         ]);
 
         $data = $request->all();
@@ -56,7 +59,8 @@ class GejalaController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'nama' => 'required'
+            'nama' => 'required',
+            'kategori' => 'required'
         ]);
 
         // check if nama is unique

@@ -105,4 +105,129 @@
             </x-card>
         </div>
     </div>
+
+    <x-modal title="Tambahkan penyakit" id="penyakit">
+        <form action="{{ route('admin.penyakit.store') }}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nama">Kode penyakit</label>
+                        <input type="text" class="form-control" name="kode" value='{{ $lastCode }}' disabled>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nama">Nama penyakit</label>
+                        <input type="text" class="form-control" name="nama" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select name="kategori" class="form-control" required>
+                            <option value="" disabled>Pilih kategori</option>
+                            <option value="daun">Daun</option>
+                            <option value="batang">Batang</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="penyebab">Keterangan penyebab</label>
+                        <textarea name="penyebab" cols="30" rows="6" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </x-modal>
+
+    <x-modal title="Edit penyakit" id="edit-penyakit">
+        <form action="{{ route('admin.penyakit.update') }}" method="POST">
+            @csrf
+            <input type="hidden" name="id">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nama">Kode penyakit</label>
+                        <input type="text" class="form-control" name="kode" value="{{ $lastCode }}"
+                            disabled>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="nama">Nama penyakit</label>
+                        <input type="text" class="form-control" name="nama">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="kategori">Kategori</label>
+                        <select name="kategori" class="form-control" required>
+                            <option value="" disabled>Pilih kategori</option>
+                            <option value="daun">Daun</option>
+                            <option value="batang">Batang</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="penyebab">Keterangan penyebab</label>
+                        <textarea name="penyebab" cols="30" rows="6" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </x-modal>
+
+    <x-slot name="script">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            $('.add').click(function() {
+                $('#penyakit').modal('show')
+            })
+
+            $('.delete').click(function(e) {
+                e.preventDefault()
+                Swal.fire({
+                    title: 'Hapus data penyakit?',
+                    text: "Kamu tidak akan bisa mengembalikannya kembali!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    cancelButtonText: 'Batal',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $(this).parent().submit()
+                    }
+                })
+            })
+
+            $('.edit').click(function() {
+                const id = $(this).data('id')
+
+                $.get(`{{ route('admin.penyakit.json') }}?id=${id}`, function(res) {
+                    $('#edit-penyakit input[name="id"]').val(res.id)
+                    $('#edit-penyakit input[name="nama"]').val(res.nama)
+                    $('#edit-penyakit input[name="kode"]').val(res.kode)
+                    $('#edit-penyakit select[name="kategori"]').val(res.kategori)
+                    $('#edit-penyakit textarea').text(res.penyebab)
+
+                    $('#edit-penyakit').modal('show')
+                })
+            })
+        </script>
+    </x-slot>
 </x-app-layout>

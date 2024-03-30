@@ -23,60 +23,57 @@
             <div class="card">
                 <div class="card-body">
                     <form action="{{ route('admin.diagnosa') }}" method="post">
-                    @csrf
+                        @csrf
 
-                    @role('Admin')
-                    <label for=""><b><i class="fas fa-user mr-1"></i> Nama</b></label>
-                    <input type="text" class="form-control mb-3 w-50" name="nama">
-                    @endrole
+                        @role('Admin')
+                            <label for=""><b><i class="fas fa-user mr-1"></i> Nama</b></label>
+                            <input type="text" class="form-control mb-3 w-50" name="nama">
+                        @endrole
 
-                    <p>Pilih gejala yang sedang dirasakan.</p>
+                        <p>Pilih gejala yang sedang dirasakan.</p>
 
-                    <label for=""><b><i class="fas fa-th mr-1"></i> Gejala-gejala</b></label>
-                    @foreach($gejala as $key => $value)
-                        @php 
-                        $mod = ($key + 1) % 2;
-                        @endphp
+                        <label for=""><b><i class="fas fa-th mr-1"></i> Gejala-gejala</b></label>
+                        @foreach ($gejala as $key => $value)
+                            @php
+                                $mod = ($key + 1) % 2;
+                            @endphp
 
-                        @if($mod == 1)
-                    <div class="row">
-                        @endif
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center justify-content-between border mb-2 p-2">
-                                <div>
-                                    <span class="ml-2">{{ $value->nama }}</span>
-                                </div>
-                                <div>
-                                    <select name="diagnosa[]" id="" class="form-control form-control-sm red-border">
-                                        <option value="{{ $value->id }}+-1">Pasti tidak</option>
-                                        <option value="{{ $value->id }}+-0.8">Hampir pasti tidak</option>
-                                        <option value="{{ $value->id }}+-0.6">Kemungkinan besar tidak</option>
-                                        <option value="{{ $value->id }}+-0.4">Mungkin tidak</option>
-                                        <option value="" selected>Tidak tahu</option>
-                                        <option value="{{ $value->id }}+0.4">Mungkin</option>
-                                        <option value="{{ $value->id }}+0.6">Sangat mungkin</option>
-                                        <option value="{{ $value->id }}+0.8">Hampir pasti</option>
-                                        <option value="{{ $value->id }}+1">Pasti</option>
-                                    </select>
+                            @if ($mod == 1)
+                                <div class="row">
+                            @endif
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center justify-content-between border mb-2 p-2">
+                                    <div>
+                                        <span class="ml-2">{{ $value->nama }}</span>
+                                    </div>
+                                    <div>
+                                        <select name="diagnosa[]" id=""
+                                            class="form-control form-control-sm red-border">
+                                            <option value="{{ $value->id }}+1">Sangat Yakin</option>
+                                            <option value="{{ $value->id }}+0.8">Yakin</option>
+                                            <option value="{{ $value->id }}+0.6">Cukup Yakin</option>
+                                            <option value="{{ $value->id }}+0.4">Kurang Yakin</option>
+                                            <option value="{{ $value->id }}+0.2">Tidak Tahu</option>
+                                            <option value="{{ $value->id }}+0">Tidak Yakin</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    @if($mod == 0)
-                    </div>
-                    @endif
-
-                    @if($key + 1 == \App\Models\Gejala::count() && $mod != 0)
-                    </div>
-                    @endif
-                        
-                    @endforeach
-                    <div class="mt-3">
-                        <button type="submit" class="btn btn-primary">Diagnosa sekarang</button>
-                    </div>
+                            @if ($mod == 0)
                 </div>
-            </form>
-            </div>  
+                @endif
+
+                @if ($key + 1 == \App\Models\Gejala::count() && $mod != 0)
+            </div>
+            @endif
+            @endforeach
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Diagnosa sekarang</button>
+            </div>
+        </div>
+        </form>
+        </div>
         </div>
     </section>
 
@@ -87,7 +84,7 @@
             })
 
             $('select[name="diagnosa[]"]').on('change', function() {
-                if(this.value == "") {
+                if (this.value == "") {
                     $(this).attr('class', 'form-control form-control-sm red-border')
                 } else {
                     $(this).attr('class', 'form-control form-control-sm green-border')

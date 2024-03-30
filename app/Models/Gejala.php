@@ -12,7 +12,8 @@ class Gejala extends Model
 
     protected $fillable = [
         'nama',
-        'kode'
+        'kode',
+        'kategori',
     ];
 
     public $timestamps = false;

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
 	DashboardController,
 	DiagnosaController,
-	RiwayatController, 
+	RiwayatController,
 	PenyakitController,
 	GejalaController,
 	RuleController,
@@ -17,7 +17,7 @@ Route::group([
 	'middleware' => 'auth',
 	'prefix' => 'panel',
 	'as' => 'admin.'
-], function(){
+], function () {
 	// diagnosa menu
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 	Route::get('/diagnosa', [DiagnosaController::class, 'index'])->name('diagnosa');
@@ -56,18 +56,17 @@ Route::group([
 	// menu rules
 	Route::get('/rules/{id}', [RuleController::class, 'index'])->name('rules');
 	Route::post('/rules/{id}/update', [RuleController::class, 'update'])->name('rules.update');
-	
-	
+
+
 	// Profile menu
 	Route::view('/profile', 'admin.profile')->name('profile');
 	Route::post('/profile', [DashboardController::class, 'profile_update'])->name('profile');
 	Route::post('/profile/upload', [DashboardController::class, 'upload_avatar'])
 		->name('profile.upload');
 
-	Route::get('/tes', function() {
+	Route::get('/tes', function () {
 	})->name('test');
-
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
